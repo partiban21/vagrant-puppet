@@ -1,8 +1,0 @@
-*.iso
-*.box
-.vagrant
-builds
-customer-facing
-output-virtualbox-iso
-packer_cache
-.idea/

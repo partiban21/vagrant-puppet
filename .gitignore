@@ -1,2 +1,7 @@
-.vagrant/
 *.log
+*.box
+*.iso
+output-virtualbox-iso
+packer_cache
+.vagrant/
+.idea/
