@@ -1,0 +1,55 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.ssh.insert_key = true
+  config.ssh.username = "vagrant"
+  
+  config.vm.define "puppetmaster_box" do |pm|
+    pm.vm.box = "centos/7"
+    pm.vm.hostname = "puppetmaster"
+	  pm.vm.network "private_network", ip: "192.168.33.10"
+    
+  	pm.vm.provider "virtualbox" do |v|
+      v.memory = 4000
+      v.cpus = 1
+      v.name = "Vagrant-PuppetMaster"
+      v.gui = false
+	  end
+
+    pm.vm.provision "shell", inline: "/vagrant/scripts/install-puppetmaster-centos.sh" 
+  end
+
+  config.vm.define "puppetagent_centos_box" do |pac|
+    pac.vm.box = "centos/7"
+    pac.vm.hostname = "puppetagentcentos"
+	  pac.vm.network "private_network", ip: "192.168.33.11"
+    
+  	pac.vm.provider "virtualbox" do |v|
+      v.memory = 4000
+      v.cpus = 1
+      v.name = "Vagrant-PuppetAgent-Centos"
+      v.gui = false
+	  end
+
+    pac.vm.provision "shell", inline: "/vagrant/scripts/install-puppetagent-centos.sh" 
+  end
+
+  config.vm.define "puppetagent_ubuntu_box" do |pau|
+    pau.vm.box = "ubuntu/bionic64"
+    pau.vm.hostname = "puppetagentubuntu"
+	  pau.vm.network "private_network", ip: "192.168.33.12"
+    
+  	pau.vm.provider "virtualbox" do |v|
+      v.memory = 4000
+      v.cpus = 1
+      v.name = "Vagrant-PuppetAgent-Ubuntu"
+      v.gui = false
+	  end
+
+    pau.vm.provision "shell", inline: "/vagrant/scripts/install-puppetagent-ubuntu.sh" 
+  end  
+
+end

@@ -12,6 +12,6 @@
 cd "%~dp0"
 vagrant destroy --force
 vagrant up
-vagrant ssh puppet_master_box -c "sudo /vagrant/scripts/setup-certificates.sh"
-vagrant ssh puppet_agent_box -c "sudo /opt/puppetlabs/bin/puppet agent -t"
-vagrant ssh puppet_master_box -c "sudo /vagrant/scripts/packages.sh"
+vagrant ssh puppetmaster_box -c "sudo /vagrant/scripts/setup-certificates.sh"
+vagrant ssh puppetagent_centos_box -c "sudo /opt/puppetlabs/bin/puppet agent -t"
+::vagrant ssh puppetmaster_box -c "sudo /vagrant/scripts/packages.sh"
