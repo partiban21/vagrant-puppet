@@ -1,4 +1,13 @@
+# Attempt #2
+
+Automate the process of building a Puppet Master and Puppet Server. 
+Using the `factoryreset_vagrant_build.bat` to tear down and build up 
+new instances of the boxes to ensure all changes are accounted for.
+
 # Setup
+1. `./factoryreset_vagrant_build.bat`
+
+OR
 
 1. Build the 2 vagrant boxes. (1 with Puppet Server, 1 with Puppet agent installed)
     - `vagrant up`
