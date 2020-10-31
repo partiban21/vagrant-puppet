@@ -1,0 +1,65 @@
+{
+  "variables": {
+    "CENTOS_IMAGE_BASE_URL": "http://centos.mirrors.nublue.co.uk"
+  },
+  "provisioners": [
+    {
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E sh -eux '{{.Path}}'",
+      "type": "shell",
+      "scripts": [
+        "scripts/install-vbox-guest-additions.sh",
+        "scripts/install-vagrant.sh",
+        "scripts/puppet/install-puppetmaster.sh",
+        "scripts/cleanup.sh"
+      ]
+    }
+  ],
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 10000,
+      "guest_os_type": "RedHat_64",
+      "headless": true,
+      "http_directory": "http",
+      "iso_urls": [
+        "CentOS-7-x86_64-Minimal-2003.iso",
+        "{{user `CENTOS_IMAGE_BASE_URL`}}/7.8.2003/isos/x86_64/CentOS-7-x86_64-Minimal-2003.iso"
+      ],
+      "iso_checksum": "sha256:659691c28a0e672558b003d223f83938f254b39875ee7559d1a4a14c79173193",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "echo 'vagrant'|sudo -S /sbin/halt -h -p",
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "virtualbox_version_file": ".vbox_version",
+      "vm_name": "pm-packer-centos-7-x86_64",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "2000"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "2"
+        ]
+      ]
+    }
+  ],
+  "post-processors": [
+    [
+      {
+      "output": "Vagrant-PuppetMaster-{{.Provider}}-centos7.box",
+      "type": "vagrant"
+      }
+    ]
+  ]
+}

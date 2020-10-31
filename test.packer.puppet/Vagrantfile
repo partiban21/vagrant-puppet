@@ -1,0 +1,36 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.ssh.insert_key = true
+  config.ssh.username = "vagrant"
+
+  # Puppet Master
+  config.vm.define "puppetmaster" do |puppetmaster|
+    puppetmaster.vm.hostname = "puppetmaster"
+    puppetmaster.vm.box = "file://Vagrant-PuppetMaster-virtualbox-centos7.box"
+    puppetmaster.vm.network "private_network", ip: "192.168.33.10"
+
+    puppetmaster.vm.provider "virtualbox" do |v|
+      v.memory = 2000
+      v.cpus = 2
+      v.name = "Vagrant-PuppetMaster"
+      v.gui = false
+    end
+  end
+
+  # Puppet Agent
+  config.vm.define "puppetagent" do |puppetagent|
+    puppetagent.vm.hostname = "puppetagent"
+    puppetagent.vm.box = "file://Vagrant-PuppetAgent-virtualbox-centos7.box"
+    puppetagent.vm.network "private_network", ip: "192.168.33.11"
+
+    puppetagent.vm.provider "virtualbox" do |v|
+      v.memory = 2000
+      v.cpus = 2
+      v.name = "Vagrant-PuppetAgent"
+      v.gui = false
+    end
+  end
+
+end
