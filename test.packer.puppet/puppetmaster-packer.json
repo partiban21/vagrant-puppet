@@ -10,6 +10,7 @@
         "scripts/install-vbox-guest-additions.sh",
         "scripts/install-vagrant.sh",
         "scripts/puppet/install-puppetmaster.sh",
+        "scripts/ruby/install-rvm.sh",
         "scripts/cleanup.sh"
       ]
     }

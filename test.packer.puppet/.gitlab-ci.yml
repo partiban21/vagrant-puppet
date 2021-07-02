@@ -1,0 +1,62 @@
+---
+variables:
+    GIT_STRATEGY: clone
+    GIT_SUBMODULE_STRATEGY: normal
+    REKT: "${DOCKER_REGISTRY_HOST}/rekt:latest"
+    # _ used as the "project name" for components not specific to a project
+    COMPONENT_REPO: spe-component/_
+#
+stages:
+    - prepare
+    - build
+    - test
+    - deploy
+#
+before_script:
+    - mkdir -p "${ARTEFACTS_PATH}/customer-facing"
+    - mkdir -p "${ARTEFACTS_PATH}/bt-internal/test-artefacts"
+#
+download-packer:
+    image: ${REKT}
+    stage: prepare
+    tags: [docker]
+    script: ./ci/download-packer.sh
+    artifacts:
+        paths:
+          - dependencies
+#
+packer-build-puppetmaster:
+    stage: build
+    tags: [shell]
+    script: ./ci/build.sh puppetmaster-packer.json
+    artifacts:
+        paths:
+           - ${ARTEFACTS_PATH}
+#
+packer-build-puppetagent:
+    stage: build
+    tags: [shell]
+    script: ./ci/build.sh puppetagent-packer.json
+    artifacts:
+        paths:
+           - ${ARTEFACTS_PATH}
+#
+test-vagrant:
+    stage: test
+    tags: [shell]
+    script: ./ci/run_tests.sh | tee "${ARTEFACTS_PATH}/bt-internal/test-artefacts/test-results.txt"
+    after_script:
+        - vagrant destroy --force
+    artifacts:
+        when: always
+        paths:
+            - "${ARTEFACTS_PATH}/bt-internal/test-artefacts/"
+#
+publish_component:
+    image: ${REKT}
+    stage: deploy
+    tags: [docker]
+    script:
+        - submodule/util.ci.scripts/rekt-publish.sh "${DIST}" "spe-component/esvuk/test-vagrant-puppet/"
+    only:
+        - tags

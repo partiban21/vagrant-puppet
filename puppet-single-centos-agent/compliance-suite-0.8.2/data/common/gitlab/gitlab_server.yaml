@@ -1,0 +1,9 @@
+---
+profiles::gitlab::server::external_url: 'http://gitlab.mydomain.tld'
+profiles::gitlab::server::gitlab_rails:
+  time_zone: 'UTC'
+  gitlab_email_enabled: false
+  gitlab_default_theme: 4
+  gitlab_email_display_name: 'GitLab'
+profiles::gitlab::server::sidekiq:
+  shutdown_timeout: 5

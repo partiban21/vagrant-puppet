@@ -1,0 +1,4 @@
+---
+profiles::python::python::version: '3.6'
+profiles::python::python::provider: 'rhscl'
+profiles::python::python::virutualenv: 'present'
